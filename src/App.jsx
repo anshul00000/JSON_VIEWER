@@ -63,13 +63,16 @@ export default function App() {
     setCopyStatus("Copying...");
 
     try {
-      if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      if (
+        navigator.clipboard &&
+        typeof navigator.clipboard.writeText === "function"
+      ) {
         await navigator.clipboard.writeText(text);
         setCopyStatus("Copied ✅");
         setTimeout(() => setCopyStatus(""), 2000);
         return;
       }
-    } catch (err) { }
+    } catch (err) {}
 
     const fallbackSuccess = fallbackCopyText(text);
     if (fallbackSuccess) {
@@ -140,10 +143,11 @@ export default function App() {
 
   return (
     <div
-      className={`min-h-screen flex flex-col p-6 ${theme === "dark"
-        ? "bg-gray-900 text-gray-100 scrollbar-dark"
-        : "bg-gray-50 text-gray-900 scrollbar-light"
-        }`}
+      className={`min-h-screen flex flex-col p-4 sm:p-6 ${
+        theme === "dark"
+          ? "bg-gray-900 text-gray-100 scrollbar-dark"
+          : "bg-gray-50 text-gray-900 scrollbar-light"
+      }`}
     >
       <style>{`
         .scrollbar-light::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -156,25 +160,27 @@ export default function App() {
 
       <div className="max-w-7xl mx-auto flex-1 w-full">
         {/* HEADER */}
-        <header className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-semibold">.JSON Viewer & Formatter</h1>
-          <div className="flex gap-2 items-center">
-
+        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+          <h1 className="text-xl sm:text-2xl font-semibold">
+            .JSON Viewer & Formatter
+          </h1>
+          <div className="flex flex-wrap gap-2 items-center w-full sm:w-auto">
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search keys/values..."
-              className={`px-2 py-1 rounded border focus:outline-none 
-                  ${theme === "dark"
-                  ? "bg-gray-800 text-white placeholder-gray-400 border-gray-600"
-                  : "bg-white text-black placeholder-gray-500 border-gray-300"
+              className={`flex-1 px-2 py-1 rounded border focus:outline-none text-sm sm:text-base
+                ${
+                  theme === "dark"
+                    ? "bg-gray-800 text-white placeholder-gray-400 border-gray-600"
+                    : "bg-white text-black placeholder-gray-500 border-gray-300"
                 }`}
             />
 
             <button
               onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
-              className="px-3 py-1 rounded bg-blue-500 text-white flex items-center gap-1"
+              className="px-3 py-1 rounded bg-blue-500 text-white flex items-center gap-1 text-sm"
             >
               {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
               {theme === "light" ? "Dark" : "Light"}
@@ -182,7 +188,7 @@ export default function App() {
 
             <button
               onClick={() => setShowTree((s) => !s)}
-              className="px-3 py-1 rounded bg-purple-500 text-white flex items-center gap-1"
+              className="px-3 py-1 rounded bg-purple-500 text-white flex items-center gap-1 text-sm"
             >
               {showTree ? <EyeOff size={16} /> : <Eye size={16} />}
               {showTree ? "Hide Tree" : "Show Tree"}
@@ -191,29 +197,26 @@ export default function App() {
         </header>
 
         {/* ACTION BUTTONS */}
-        <div className="flex flex-wrap gap-2 items-center mb-2">
-          <button onClick={formatJson} className="px-3 py-1 rounded bg-green-600 text-white">
+        <div className="flex flex-wrap gap-2 items-center mb-3">
+          <button className="flex-1 sm:flex-none px-3 py-1 rounded bg-green-600 text-white text-sm" onClick={formatJson}>
             Format
           </button>
-          <button onClick={minifyJson} className="px-3 py-1 rounded bg-yellow-500 text-white">
+          <button className="flex-1 sm:flex-none px-3 py-1 rounded bg-yellow-500 text-white text-sm" onClick={minifyJson}>
             Minify
           </button>
-          <button onClick={validateJson} className="px-3 py-1 rounded bg-indigo-600 text-white">
+          <button className="flex-1 sm:flex-none px-3 py-1 rounded bg-indigo-600 text-white text-sm" onClick={validateJson}>
             Validate
           </button>
-
           <button
             onClick={copyToClipboard}
-            className="px-3 py-1 rounded bg-gray-600 text-white flex items-center gap-2"
+            className="flex-1 sm:flex-none px-3 py-1 rounded bg-gray-600 text-white flex items-center gap-2 text-sm"
           >
             <span>{copyStatus ? copyStatus : "Copy"}</span>
           </button>
-
-          <button onClick={downloadJson} className="px-3 py-1 rounded bg-gray-700 text-white">
+          <button className="flex-1 sm:flex-none px-3 py-1 rounded bg-gray-700 text-white text-sm" onClick={downloadJson}>
             Download
           </button>
-
-          <label className="px-3 py-1 rounded bg-gray-300 cursor-pointer">
+          <label className="flex-1 sm:flex-none px-3 py-1 rounded bg-blue-600 cursor-pointer text-sm text-center">
             Upload
             <input
               onChange={uploadFile}
@@ -225,21 +228,29 @@ export default function App() {
         </div>
 
         {/* ERROR MESSAGE */}
-        <div className="ml-auto text-sm text-red-500">{error ? `Error: ${error}` : null}</div>
+        <div className="text-sm text-red-500 mb-2">
+          {error ? `Error: ${error}` : null}
+        </div>
 
         {/* MAIN CONTENT */}
-        <main className={`grid gap-4 ${showTree ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"}`}>
+        <main
+          className={`grid gap-4 ${
+            showTree ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"
+          }`}
+        >
           {/* Editor */}
           <section>
-            <label className="mb-2 font-medium">JSON Input</label>
+            <label className="mb-2 font-medium block">JSON Input</label>
             <textarea
               ref={textRef}
               value={text}
               onChange={(e) => setText(e.target.value)}
-              rows={22}
-              className={`w-full font-mono p-3 rounded border resize-none focus:outline-none ${theme === "dark"
-                ? "bg-gray-800 text-gray-100 border-gray-700"
-                : "bg-white text-gray-900 border-gray-300"
+              rows={20}
+              className={`w-full font-mono p-3 rounded border resize-none focus:outline-none text-sm sm:text-base
+                ${
+                  theme === "dark"
+                    ? "bg-gray-800 text-gray-100 border-gray-700"
+                    : "bg-white text-gray-900 border-gray-300"
                 }`}
             />
           </section>
@@ -247,9 +258,13 @@ export default function App() {
           {/* Viewer */}
           {showTree && (
             <section>
-              <label className="mb-2 font-medium">Tree Viewer</label>
+              <label className="mb-2 font-medium block">Tree Viewer</label>
               <div
-                className={`p-3 mt-2 rounded border h-[550px] overflow-auto ${theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"
+                className={`p-3 rounded border h-[300px] sm:h-[500px] overflow-auto text-sm sm:text-base
+                  ${
+                    theme === "dark"
+                      ? "bg-gray-800 border-gray-700"
+                      : "bg-white border-gray-300"
                   }`}
               >
                 {parsed ? (
@@ -261,7 +276,9 @@ export default function App() {
                     isMatch={isMatch}
                   />
                 ) : (
-                  <div className="text-sm text-gray-400">No valid JSON to show</div>
+                  <div className="text-sm text-gray-400">
+                    No valid JSON to show
+                  </div>
                 )}
               </div>
             </section>
@@ -271,14 +288,19 @@ export default function App() {
 
       {/* FOOTER */}
       <footer
-        className={`mt-6 py-4 border-t ${theme === "dark" ? "border-gray-700 text-gray-400" : "border-gray-300 text-gray-600"
-          }`}
+        className={`mt-6 py-4 border-t text-sm ${
+          theme === "dark"
+            ? "border-gray-700 text-gray-400"
+            : "border-gray-300 text-gray-600"
+        }`}
       >
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <a href="https://anshul00.netlify.app/" target="_BLANCK">
-            <p className="text-sm">
-              Created with ❤️ by{" "}
-              <span className="font-semibold text-blue-500">Anshul Chaurasiya</span>
+            <p>
+              Created with 🧑‍💻 by
+              <span className="font-semibold text-white ml-2">
+                Anshul Chaurasiya
+              </span>
             </p>
           </a>
           <div className="flex gap-4">
@@ -336,9 +358,14 @@ function JSONNode({ data, path, collapsedPaths, toggleCollapse, isMatch }) {
         </div>
         {!isCollapsed && (
           <div className="ml-5">
-            {keys.length === 0 && <div className="text-gray-500">(empty object)</div>}
+            {keys.length === 0 && (
+              <div className="text-gray-500">(empty object)</div>
+            )}
             {keys.map((k) => (
-              <div key={k} className={`mb-1 ${isMatch(k, data[k]) ? "" : "opacity-30"}`}>
+              <div
+                key={k}
+                className={`mb-1 ${isMatch(k, data[k]) ? "" : "opacity-30"}`}
+              >
                 <span className="text-green-600">"{k}"</span>:{" "}
                 <JSONNode
                   data={data[k]}
@@ -367,7 +394,9 @@ function JSONNode({ data, path, collapsedPaths, toggleCollapse, isMatch }) {
         </div>
         {!isCollapsed && (
           <div className="ml-5">
-            {data.length === 0 && <div className="text-gray-500">(empty array)</div>}
+            {data.length === 0 && (
+              <div className="text-gray-500">(empty array)</div>
+            )}
             {data.map((item, i) => (
               <div key={i} className="mb-1">
                 <span className="text-blue-600">[{i}]</span>:{" "}
