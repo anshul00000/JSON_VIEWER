@@ -298,8 +298,8 @@ export default function App() {
           <a href="https://anshul00.netlify.app/" target="_BLANCK">
             <p>
               Created with 🧑‍💻 by
-              <span className="font-semibold text-white ml-2">
-                Anshul Chaurasiya
+              <span className={`font-semibold ml-2 ${theme === "dark" ? "text-white" : "text-black" }`}>
+                 Anshul Chaurasiya
               </span>
             </p>
           </a>
