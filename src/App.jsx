@@ -297,7 +297,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <a href="https://anshul00.netlify.app/" target="_BLANCK">
             <p>
-              Created with 🧑‍💻 by
+              Created 🧑‍💻 by
               <span className={`font-semibold ml-2 ${theme === "dark" ? "text-white" : "text-black" }`}>
                  Anshul Chaurasiya
               </span>
